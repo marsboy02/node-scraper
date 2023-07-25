@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "tsc scraper.ts && node scraper.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.4"
+  }
+}
