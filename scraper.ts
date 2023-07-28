@@ -1,9 +1,12 @@
 import axios from "axios";
-import * as cheerio from "cheerio"
 import Redis from 'ioredis';
+import * as cheerio from "cheerio"
+import * as dotenv from 'dotenv';
 const redis = new Redis({})
 
-const baseUrl = "https://www.uos.ac.kr/korNotice/list.do?list_id=FA1";
+dotenv.config();
+
+const baseUrl = process.env.BASE_URL;
 const count = 10;
 
 async function ReadQueuedUrls() {
@@ -13,7 +16,7 @@ async function ReadQueuedUrls() {
 
 async function QueueContainsUrls(index: string) {
     const isMember = await redis.lpos('visited_queue', index);
-    if (!isMember && index) {
+    if (isMember == null && index) {
         await CrawlPageAndQueueUrls(index);
     }
 }
