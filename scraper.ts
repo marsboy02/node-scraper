@@ -1,7 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio"
 import Redis from 'ioredis';
-// const redis = require('redis');
 const redis = new Redis({})
 
 const baseUrl = "https://www.uos.ac.kr/korNotice/list.do?list_id=FA1";
