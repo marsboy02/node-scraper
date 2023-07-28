@@ -9,7 +9,10 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 const baseUrl = process.env.BASE_URL;
 const count = 10;
-const redis = new Redis({})
+const redis = new Redis({
+    port: +process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST,
+})
 
 // #0 Crawl Urls
 async function CrawlUrls(baseUrl) {
