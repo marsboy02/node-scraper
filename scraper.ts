@@ -86,7 +86,7 @@ async function Consumer() {
 
 function main() {
     CrawlUrls(baseUrl);
-    setTimeout(() => Consumer(), 2000);
+    setTimeout(() => Consumer(), 1250);
 }
 
 main();
