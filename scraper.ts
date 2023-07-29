@@ -12,8 +12,8 @@ const producerCount = +process.env.PRODUCER_COUNT;
 const consumerCount = +process.env.CONSUMER_COUNT;
 const visitedQueueThreshold = +process.env.VISITED_QUEUE_THRESHOLD
 const redis = new Redis({
-    port: +process.env.REDIS_PORT,
     host: process.env.REDIS_HOST,
+    port: +process.env.REDIS_PORT,
 })
 
 // #0 Crawl Urls
