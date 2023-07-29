@@ -8,7 +8,9 @@ import * as dotenv from 'dotenv';
 // environment
 dotenv.config();
 const baseUrl = process.env.BASE_URL;
-const count = 10;
+const producerCount = +process.env.PRODUCER_COUNT;
+const consumerCount = +process.env.CONSUMER_COUNT;
+const visitedQueueThreshold = +process.env.VISITED_QUEUE_THRESHOLD
 const redis = new Redis({
     port: +process.env.REDIS_PORT,
     host: process.env.REDIS_HOST,
@@ -20,7 +22,7 @@ async function CrawlUrls(baseUrl) {
         .then(async response => {
             const html = response.data;
             const $ = cheerio.load(html);
-            for (let i = 1; i < count; i++) {
+            for (let i = 1; i < producerCount; i++) {
                 const element = '#contents > ul > li:nth-child('+ i +') > div > div > div.ti > a'
                 const title = $(element).attr('href');
                 const regex = /javascript:fnView\('(\d+)', '(\d+)'\);/;
@@ -68,18 +70,23 @@ async function CrawlPageAndQueueUrls(index: string) {
 
 // #4 Complete Crawl and Webhook
 async function CompleteCrawl(index: string) {
-    console.log(index);
+    await VisitedUrlsExceedsThreshold();
     await redis.rpush('visited_queue', index);
 }
 
-
-async function main() {
-    await ReadQueuedUrls();
-    await ReadQueuedUrls();
-    await ReadQueuedUrls();
-    await ReadQueuedUrls();
-    await ReadQueuedUrls();
+// #5 Visited Urls Exceeds Threshold?
+async function VisitedUrlsExceedsThreshold() {
+    const visitedQueueLength = await redis.llen('visited_queue');
+    if (visitedQueueLength > visitedQueueThreshold) { await redis.lpop('visited_queue') }
 }
 
-CrawlUrls(baseUrl);
+async function Consumer() {
+    for (let i = 0; i < consumerCount; i++) { await ReadQueuedUrls() }
+}
+
+function main() {
+    CrawlUrls(baseUrl);
+    setTimeout(() => Consumer(), 2000);
+}
+
 main();
