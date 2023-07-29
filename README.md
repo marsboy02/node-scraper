@@ -14,3 +14,8 @@
 # 실행
 & yarn start
 ```
+
+```bash
+# docker-compose 사용하는 경우
+& docker-compose up 
+```
