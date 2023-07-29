@@ -1,1 +1,19 @@
 version: '3'
+services:
+  redis-server:
+    image: "redis"
+    ports:
+      - "6379:6379"
+
+  node-app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      BASE_URL: "https://www.uos.ac.kr/korNotice/list.do?list_id=FA1"
+      PRODUCER_COUNT: 25
+      CONSUMER_COUNT: 100
+      VISITED_QUEUE_THRESHOLD: 100
+      REDIS_PORT: 6379
+      REDIS_HOST: "redis-server"
+
