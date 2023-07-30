@@ -4,7 +4,6 @@ import * as cheerio from "cheerio"
 import * as dotenv from 'dotenv';
 
 
-
 // environment
 dotenv.config();
 const baseUrl = process.env.BASE_URL;
@@ -16,8 +15,11 @@ const redis = new Redis({
     port: +process.env.REDIS_PORT,
 })
 
-// #0 Crawl Urls
-async function CrawlUrls(baseUrl) {
+/*
+    Producer
+    Crawl Urls into Crawl Queue
+ */
+function Producer(baseUrl) {
     axios.get(baseUrl)
         .then(async response => {
             const html = response.data;
@@ -35,22 +37,28 @@ async function CrawlUrls(baseUrl) {
     });
 }
 
+/*
+   Consumer
+   Read Queued Urls
+ */
+async function Consumer() {
+    for (let i = 0; i < consumerCount; i++) { await ReadQueuedUrls() }
+}
 
-// #1 Read Queued Urls
+
+// #1 Read Urls in Crawl Queue
 async function ReadQueuedUrls() {
     const index = await redis.lpop('crawl_queue');
     await QueueContainsUrls(index);
 }
 
-// #2 Queue Contains Urls?
+// #2 Visited Queue Already Contains Url?
 async function QueueContainsUrls(index: string) {
     const isMember = await redis.lpos('visited_queue', index);
-    if (isMember == null && index) {
-        await CrawlPageAndQueueUrls(index);
-    }
+    if (isMember == null && index) { await CrawlPageAndQueueUrls(index); }
 }
 
-// #3 Crawl Page and Queue Urls
+// #3 Crawl Page and Queue Urls in Visited Queue
 async function CrawlPageAndQueueUrls(index: string) {
     const fullUrl = 'https://www.uos.ac.kr/korNotice/view.do?list_id=FA1' + '&seq=' + index;
     await axios.get(fullUrl)
@@ -61,7 +69,6 @@ async function CrawlPageAndQueueUrls(index: string) {
             const detail = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span').text();
             console.log('title: ', title);
             console.log('detail: ', detail);
-            // 웹훅 쏘는 지점
         }).catch(error => {
             console.error('Error fetching data: ', error);
     });
@@ -80,12 +87,8 @@ async function VisitedUrlsExceedsThreshold() {
     if (visitedQueueLength > visitedQueueThreshold) { await redis.lpop('visited_queue') }
 }
 
-async function Consumer() {
-    for (let i = 0; i < consumerCount; i++) { await ReadQueuedUrls() }
-}
-
 function main() {
-    CrawlUrls(baseUrl);
+    Producer(baseUrl);
     setTimeout(() => Consumer(), 1250);
 }
 
