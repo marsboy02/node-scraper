@@ -6,11 +6,12 @@ import * as dotenv from 'dotenv';
 
 // environment
 dotenv.config();
-const baseUrl = process.env.BASE_URL;
-const producerCount = +process.env.PRODUCER_COUNT;
-const consumerCount = +process.env.CONSUMER_COUNT;
-const visitedQueueThreshold = +process.env.VISITED_QUEUE_THRESHOLD
-const redis = new Redis({
+const listUrl: string = process.env.LIST_URL;
+const pageUrl: string = process.env.PAGE_URL;
+const producerCount: number = +process.env.PRODUCER_COUNT;
+const consumerCount: number  = +process.env.CONSUMER_COUNT;
+const visitedQueueThreshold: number  = +process.env.VISITED_QUEUE_THRESHOLD
+const redis: Redis = new Redis({
     host: process.env.REDIS_HOST,
     port: +process.env.REDIS_PORT,
 })
@@ -19,7 +20,7 @@ const redis = new Redis({
     Producer
     Crawl Urls into Crawl Queue
  */
-function Producer(baseUrl) {
+function Producer(baseUrl): void {
     axios.get(baseUrl)
         .then(async response => {
             const html = response.data;
@@ -60,7 +61,7 @@ async function QueueContainsUrls(index: string) {
 
 // #3 Crawl Page and Queue Urls in Visited Queue
 async function CrawlPageAndQueueUrls(index: string) {
-    const fullUrl = 'https://www.uos.ac.kr/korNotice/view.do?list_id=FA1' + '&seq=' + index;
+    const fullUrl = pageUrl + '&seq=' + index;
     await axios.get(fullUrl)
         .then(response => {
             const html = response.data;
@@ -88,7 +89,7 @@ async function VisitedUrlsExceedsThreshold() {
 }
 
 function main() {
-    Producer(baseUrl);
+    Producer(listUrl);
     setTimeout(() => Consumer(), 1250);
 }
 
