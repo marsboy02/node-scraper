@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scraper-cronjob
+spec:
+  schedule: "* * * * *"  # Replace this with your desired cron schedule
+  jobTemplate:
+    spec:
+      completions: 1
+      parallelism: 2
+      template:
+        spec:
+          containers:
+            - name: rebuild-scraper
+              image: bae4614/rebuild-scraper:latest
+              env:
+                - name: CRAWL_TYPE
+                  value: "FA1"
+            - name: rebuild-scraper-1
+              image: bae4614/rebuild-scraper-1:latest
+              env:
+                  - name: CRAWL_TYPE
+                    value: "FA2"
+          restartPolicy: OnFailure
+

@@ -1,20 +1,56 @@
-version: '3'
+version: '3.7'
+
+x-common-variables: &common-variables
+  PRODUCER_COUNT: 20
+  CONSUMER_COUNT: 10
+  VISITED_QUEUE_THRESHOLD: 100
+  REDIS_PORT: 6379
+  REDIS_HOST: "redis-server"
+  BASE_URL: "https://www.uos.ac.kr/korNotice/list.do?list_id="
+  PAGE_URL: "https://www.uos.ac.kr/korNotice/view.do?list_id="
+
 services:
   redis-server:
     image: "redis"
     ports:
       - "6379:6379"
 
-  node-app:
+  producer-fa1:
     build: .
-    ports:
-      - "3000:3000"
+    volumes:
+      - ./producer.js:/app/producer.js
+    command: ["node", "/app/producer.js"]
+    working_dir: /app
     environment:
-      BASE_URL: "https://www.uos.ac.kr/korNotice/list.do?list_id=FA1"
-      PAGE_URL: "https://www.uos.ac.kr/korNotice/view.do?list_id=FA1"
-      PRODUCER_COUNT: 25
-      CONSUMER_COUNT: 100
-      VISITED_QUEUE_THRESHOLD: 100
-      REDIS_PORT: 6379
-      REDIS_HOST: "redis-server"
+      <<: *common-variables
+      CRAWL_TYPE: "FA1"
 
+  producer-fa2:
+    build: .
+    volumes:
+      - ./producer.js:/app/producer.js
+    command: [ "node", "/app/producer.js" ]
+    working_dir: /app
+    environment:
+      <<: *common-variables
+      CRAWL_TYPE: "FA2"
+
+  consumer-fa1:
+    build: .
+    volumes:
+      - ./consumer.js:/app/consumer.js
+    command: ["node", "/app/consumer.js"]
+    working_dir: /app
+    environment:
+      <<: *common-variables
+      CRAWL_TYPE: "FA1"
+
+  consumer-fa2:
+    build: .
+    volumes:
+      - ./consumer.js:/app/consumer.js
+    command: [ "node", "/app/consumer.js" ]
+    working_dir: /app
+    environment:
+      <<: *common-variables
+      CRAWL_TYPE: "FA2"
