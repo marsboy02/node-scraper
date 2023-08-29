@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "tsc producer.ts && tsc consumer.ts"
+    "start": "tsc scraper.ts && node scraper.js",
+    "build": "tsc scraper.ts"
   },
   "dependencies": {
     "axios": "^1.4.0",

@@ -1,8 +1,9 @@
 version: '3.7'
 
 x-common-variables: &common-variables
-  PRODUCER_COUNT: 20
-  CONSUMER_COUNT: 10
+  PRODUCER_COUNT: 25
+  CONSUMER_COUNT: 100
+  CONSUMER_INTERVAL: 500
   VISITED_QUEUE_THRESHOLD: 100
   REDIS_PORT: 6379
   REDIS_HOST: "redis-server"
@@ -15,42 +16,34 @@ services:
     ports:
       - "6379:6379"
 
-  producer-fa1:
+  scraper-fa1:
     build: .
-    volumes:
-      - ./producer.js:/app/producer.js
-    command: ["node", "/app/producer.js"]
     working_dir: /app
+    command: ["yarn", "start"]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA1"
 
-  producer-fa2:
+  scraper-fa2:
     build: .
-    volumes:
-      - ./producer.js:/app/producer.js
-    command: [ "node", "/app/producer.js" ]
     working_dir: /app
+    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA2"
 
-  consumer-fa1:
+  scraper-fa34:
     build: .
-    volumes:
-      - ./consumer.js:/app/consumer.js
-    command: ["node", "/app/consumer.js"]
     working_dir: /app
+    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
-      CRAWL_TYPE: "FA1"
+      CRAWL_TYPE: "FA34"
 
-  consumer-fa2:
+  scraper-fa35:
     build: .
-    volumes:
-      - ./consumer.js:/app/consumer.js
-    command: [ "node", "/app/consumer.js" ]
     working_dir: /app
+    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
-      CRAWL_TYPE: "FA2"
+      CRAWL_TYPE: "FA35"
