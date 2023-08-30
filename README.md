@@ -1,47 +1,45 @@
 # url-scraper
 
 - AWS의 serverless web crawling 예제를 참고하여 node & redis로 스크래퍼를 구현했습니다.
-- 참고 : [scaling up a serverless web crawler and search engine](https://aws.amazon.com/ko/blogs/architecture/scaling-up-a-serverless-web-crawler-and-search-engine/)
+- [참고] : [scaling up a serverless web crawler and search engine](https://aws.amazon.com/ko/blogs/architecture/scaling-up-a-serverless-web-crawler-and-search-engine/)
 
-## 환경
-### 실행 
+## Environment
+
+**의존성 설치**
 ```bash
-# minikube 실행
-minikube start
+$ yarn
+```
+
+### docker-compose를 사용하는 경우
+
+```bash
+$ docker-compose up
+```
+
+### k8s를 사용하는 경우
+
+**도커 이미지 빌드**
+
+```bash
+# docker image build
+$ docker build -t {username}/node-scraper .
 ```
 
 ```bash
-# cronjob 실행
-kubectl apply -f cronjob.yaml
+# docker image push
+$ docker push -t {username}/node-scraper
 ```
 
-### 실행 후 
-```bash
-# log watch 하는 법
-stern scraper-cronjob
-```
+**k8s 클러스터 세팅**
 
 ```bash
-# pod 상태 확인하는 법
-kubectl get pods
-```
+# redis deployment
+$ kubectl create -f ./k8s/deployment.yaml
 
-### 개발
-```bash
-# k8s 말고 도커로 노드 스크립트 확인하는 법 
-docker-compose -f docker-compose.yml up
-docker-compose -f docker-compose-2.yml up
-```
+# redis service
+$ kubectl create -f ./k8s/service.yaml
 
-
-```bash
-# 도커 이미지 수정하는 법
-docker-compose -f docker-compose.yml build
-docker tag hyeongjun-scraper-node-app bae4614/rebuild-scraper:latest
-docker push bae4614/rebuild-scraper:latest
-
-docker-compose -f docker-compose-2.yml build
-docker tag hyeongjun-scraper-node-app bae4614/rebuild-scraper-1:latest
-docker push bae4614/rebuild-scraper-1:latest
+# cronjob
+$ kubectl create -f ./k8s/cronjob.yaml
 ```
 

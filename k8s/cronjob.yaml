@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scraper-cronjob
+spec:
+  schedule: "* * * * *"  # Replace this with your desired cron schedule
+  jobTemplate:
+    spec:
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - name: node-scraper
+              image: marsboy02/node-scraper:latest
+              args: ["yarn", "start"]
+              env:
+                - name: REDIS_HOST
+                  value: "10.100.100.100"
+                - name: REDIS_PORT
+                  value: "6379"
+          restartPolicy: OnFailure

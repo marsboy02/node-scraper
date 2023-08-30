@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scraper-redis
+  labels:
+    app: scraper-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scraper-redis
+  template:
+    metadata:
+      labels:
+        app: scraper-redis
+    spec:
+      containers:
+        - name: scraper-redis
+          image: redis
+          command: ["redis-server"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 6379
