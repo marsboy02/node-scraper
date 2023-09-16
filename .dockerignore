@@ -1,6 +1,6 @@
+README.md
 .idea
 
+# build
 node_modules
-
-.gitignore
-README.md
+*.js

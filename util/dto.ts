@@ -2,9 +2,10 @@ export interface PageDtoInterface {
     title: string,
     writer: string,
     department: string,
+    files: object,
     date: string,
-    files: string,
     description: string,
+    url: string,
 }
 
 export class PageDto implements PageDtoInterface {
@@ -12,9 +13,10 @@ export class PageDto implements PageDtoInterface {
         public title: string,
         public writer: string,
         public department: string,
-        public date: string,
-        public files: string,
+        public files: object,
         public description: string,
+        public date: string,
+        public url: string,
         )
     {}
 }

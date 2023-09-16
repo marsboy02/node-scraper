@@ -11,8 +11,9 @@ import {
     crawlType,
     redisHost,
     redisPort,
+    consumerTTL,
 } from "./util/constants";
-import {TrimEscapeSequence} from "./util/functions";
+import {extractFilesFromHTML, TrimEscapeSequence} from "./util/functions";
 
 
 const redis: Redis = new Redis({
@@ -47,6 +48,9 @@ function extractIndexWithHtml(i, $): string {
 // #1 Read Urls in Crawl Queue
 async function ReadQueuedUrls(): Promise<PageDtoInterface> {
     const index: string = await redis.lpop('crawl_queue_' + crawlType);
+    if (index == null) {
+        return null
+    }
     return await QueueContainsUrls(index);
 }
 
@@ -63,7 +67,7 @@ async function CrawlPageAndQueueUrls(index): Promise<PageDtoInterface> {
         .then(response => {
             const html = response.data;
             const $ = cheerio.load(html);
-            return extractedPageWithIndex($);
+            return extractedPageWithIndex(fullUrl, $);
         })
     await CompleteCrawl(index);
     return pageDto
@@ -83,28 +87,37 @@ async function VisitedUrlsExceedsThreshold(): Promise<void> {
     }
 }
 
-function extractedPageWithIndex($): PageDtoInterface {
+function extractedPageWithIndex(fullUrl: string, $: cheerio.CheerioAPI): PageDtoInterface {
     const title = $('#contents > div > div.view-bx > div.vw-tibx > h4').text();
     const writer = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(1)').text();
     const department = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(2)').text();
     const date = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(3)').text();
-    const files = $('#contents > div > div.view-bx > div.vw-tibx > ul').text();
+    const files = extractFilesFromHTML($)
     const description = $('#contents > div > div.view-bx > div.vw-con').text();
     return new PageDto(title, writer, department,
-        TrimEscapeSequence(date), TrimEscapeSequence(files), TrimEscapeSequence(description))
+      files, TrimEscapeSequence(description),  TrimEscapeSequence(date).substring(0,10), fullUrl)
 }
 
 function main(): void {
+    // produce
     Produce(listUrl, producerCount);
+
+    // consume
     const interval = setInterval(async () => {
         const pageData: PageDtoInterface = await ReadQueuedUrls();
-        // Webhook point
-        console.log(pageData);
+        if (pageData == null) {
+            console.log("queue is empty");
+        } else {
+            // Webhook point
+            console.log(pageData);
+        }
     }, consumerInterval);
 
-    setTimeout(function(): void {
+    setTimeout((): void => {
+        console.log("container consume done!")
         clearInterval(interval);
-    }, 20000); // 10초를 밀리초 단위로 표현
+        process.exit(0);
+    }, consumerTTL);
 }
 
 main();

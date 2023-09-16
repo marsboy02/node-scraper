@@ -1,14 +1,8 @@
 version: '3.7'
 
 x-common-variables: &common-variables
-  PRODUCER_COUNT: 25
-  CONSUMER_COUNT: 100
-  CONSUMER_INTERVAL: 500
-  VISITED_QUEUE_THRESHOLD: 100
   REDIS_PORT: 6379
   REDIS_HOST: "redis-server"
-  BASE_URL: "https://www.uos.ac.kr/korNotice/list.do?list_id="
-  PAGE_URL: "https://www.uos.ac.kr/korNotice/view.do?list_id="
 
 services:
   redis-server:
@@ -19,7 +13,6 @@ services:
   scraper-fa1:
     build: .
     working_dir: /app
-    command: ["yarn", "start"]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA1"
@@ -27,7 +20,6 @@ services:
   scraper-fa2:
     build: .
     working_dir: /app
-    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA2"
@@ -35,7 +27,6 @@ services:
   scraper-fa34:
     build: .
     working_dir: /app
-    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA34"
@@ -43,7 +34,6 @@ services:
   scraper-fa35:
     build: .
     working_dir: /app
-    command: [ "yarn", "start" ]
     environment:
       <<: *common-variables
       CRAWL_TYPE: "FA35"

@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: scraper-cronjob
 spec:
-  schedule: "* * * * *"  # Replace this with your desired cron schedule
+  schedule: "* * * * *"
   jobTemplate:
     spec:
       completions: 1
@@ -11,12 +11,40 @@ spec:
       template:
         spec:
           containers:
-            - name: node-scraper
-              image: marsboy02/node-scraper:latest
-              args: ["yarn", "start"]
+            - name: scraper-fa1
+              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
               env:
+                - name: CRAWL_TYPE
+                  value: "FA1"
                 - name: REDIS_HOST
-                  value: "10.100.100.100"
+                  value: "172.20.100.100"
+                - name: REDIS_PORT
+                  value: "6379"
+            - name: scraper-fa2
+              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              env:
+                - name: CRAWL_TYPE
+                  value: "FA2"
+                - name: REDIS_HOST
+                  value: "172.20.100.100"
+                - name: REDIS_PORT
+                  value: "6379"
+            - name: scraper-fa34
+              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              env:
+                - name: CRAWL_TYPE
+                  value: "FA34"
+                - name: REDIS_HOST
+                  value: "172.20.100.100"
+                - name: REDIS_PORT
+                  value: "6379"
+            - name: scraper-fa35
+              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              env:
+                - name: CRAWL_TYPE
+                  value: "FA35"
+                - name: REDIS_HOST
+                  value: "172.20.100.100"
                 - name: REDIS_PORT
                   value: "6379"
           restartPolicy: OnFailure
