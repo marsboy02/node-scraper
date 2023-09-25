@@ -1,24 +1,29 @@
-# url-scraper
+# node-scraper
 
-- AWS의 serverless web crawling 예제를 참고하여 node & redis로 스크래퍼를 구현했습니다.
-- [참고] : [scaling up a serverless web crawler and search engine](https://aws.amazon.com/ko/blogs/architecture/scaling-up-a-serverless-web-crawler-and-search-engine/)
+- AWS의 serverless web crawling 예제를 참고하여 node & redis로 스크래퍼를 구현했습니다. 스크랩 대상 url은 서울시립대학교의 공지사항입니다.
+- **참고** : [scaling up a serverless web crawler and search engine](https://aws.amazon.com/ko/blogs/architecture/scaling-up-a-serverless-web-crawler-and-search-engine/)
+
+## Detail
+- 컨테이너 환경에서 동작할 수 있도록 docker & docker-compose 환경 지원
+- k8s 환경에서 동작할 수 있도록 k8s & kustomize 환경 지원
+
 
 ## Environment
 
-**의존성 설치**
+### 1.install dependency
 ```bash
 $ yarn
 ```
 
-### docker-compose를 사용하는 경우
+### 2-1. using docker-compose
 
 ```bash
 $ docker-compose up
 ```
 
-### k8s를 사용하는 경우
+### 2-2. using k8s
 
-**도커 이미지 빌드**
+**build docker image**
 
 ```bash
 # docker image build
@@ -30,16 +35,10 @@ $ docker build -t {username}/node-scraper .
 $ docker push -t {username}/node-scraper
 ```
 
-**k8s 클러스터 세팅**
+**k8s**
 
 ```bash
-# redis deployment
-$ kubectl create -f ./k8s/deployment.yaml
-
-# redis service
-$ kubectl create -f ./k8s/service.yaml
-
-# cronjob
-$ kubectl create -f ./k8s/cronjob.yaml
+# using kustomize
+$ kubectl kustomize . | kubectl apply -f - -n scraper
 ```
 
