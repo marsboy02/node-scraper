@@ -12,6 +12,7 @@ export const {
     crawlType,
     redisHost,
     redisPort,
+    webhookUrl,
 } = {
     listUrl: (process.env.LIST_URL + process.env.CRAWL_TYPE) || "https://www.uos.ac.kr/korNotice/list.do?list_id=" + process.env.CRAWL_TYPE,
     pageUrl: (process.env.PAGE_URL + process.env.CRAWL_TYPE) || "https://www.uos.ac.kr/korNotice/view.do?list_id=" + process.env.CRAWL_TYPE,
@@ -22,4 +23,5 @@ export const {
     crawlType: process.env.CRAWL_TYPE,
     redisHost: process.env.REDIS_HOST,
     redisPort: +process.env.REDIS_PORT,
+    webhookUrl: process.env.WEBHOOK_URL,
 };

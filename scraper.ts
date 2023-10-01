@@ -12,8 +12,11 @@ import {
     redisHost,
     redisPort,
     consumerTTL,
+    webhookUrl,
+
 } from "./util/constants";
-import {extractFilesFromHTML, TrimEscapeSequence} from "./util/functions";
+import { extractFilesFromHTML, TrimEscapeSequence } from "./util/functions";
+import { triggerWebHook } from "./util/webhook";
 
 
 const redis: Redis = new Redis({
@@ -108,7 +111,7 @@ function main(): void {
         if (pageData == null) {
             console.log("queue is empty");
         } else {
-            // Webhook point
+            triggerWebHook(webhookUrl, pageData);
             console.log(pageData);
         }
     }, consumerInterval);
