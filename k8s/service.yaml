@@ -4,7 +4,6 @@ metadata:
   name: scraper-redis
 spec:
   type: ClusterIP
-  clusterIP: 172.20.100.100
   selector:
     app: scraper-redis
   ports:

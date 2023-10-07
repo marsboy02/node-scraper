@@ -17,34 +17,58 @@ spec:
                 - name: CRAWL_TYPE
                   value: "FA1"
                 - name: REDIS_HOST
-                  value: "172.20.100.100"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key : REDIS_HOST
                 - name: REDIS_PORT
-                  value: "6379"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_PORT
             - name: scraper-fa2
               image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA2"
                 - name: REDIS_HOST
-                  value: "172.20.100.100"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_HOST
                 - name: REDIS_PORT
-                  value: "6379"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_PORT
             - name: scraper-fa34
               image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA34"
                 - name: REDIS_HOST
-                  value: "172.20.100.100"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_HOST
                 - name: REDIS_PORT
-                  value: "6379"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_PORT
             - name: scraper-fa35
               image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA35"
                 - name: REDIS_HOST
-                  value: "172.20.100.100"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_HOST
                 - name: REDIS_PORT
-                  value: "6379"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: scraper-cm
+                      key: REDIS_PORT
           restartPolicy: OnFailure

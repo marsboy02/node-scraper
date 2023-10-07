@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scraper-cm
+data:
+  REDIS_HOST: "redis.rebuild.svc.cluster.local"
+  REDIS_PORT: "6379"
