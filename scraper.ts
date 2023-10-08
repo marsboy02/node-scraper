@@ -14,7 +14,7 @@ import {
     consumerTTL, webhookUrl,
 
 } from "./util/constants";
-import {extractFilesFromHTML, TrimEscapeSequence} from "./util/crawl";
+import { extractFilesFromHTML, TrimEscapeSequence } from "./util/crawl";
 import { triggerWebHook } from "./util/webhook";
 
 
@@ -95,7 +95,7 @@ function extractedPageWithIndex(fullUrl: string, $: cheerio.CheerioAPI): PageDto
     const department = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(2)').text();
     const date = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(3)').text();
     const files = extractFilesFromHTML($)
-    const description = $('#contents > div > div.view-bx > div.vw-con').html();
+    const description = $('#contents > div > div.view-bx > div.vw-con').html()
     return new PageDto(title, writer, department, files, TrimEscapeSequence(description), TrimEscapeSequence(date).substring(0,10), fullUrl)
 }
 

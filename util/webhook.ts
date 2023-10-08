@@ -1,5 +1,5 @@
 import * as XHLHttpRequest from "xhr2";
-import {PageDtoInterface} from "./dto";
+import { PageDtoInterface } from "./dto";
 
 export function triggerWebHook(webhookURL: string, payload: PageDtoInterface) {
     const xhr = new XHLHttpRequest();
@@ -15,6 +15,5 @@ export function triggerWebHook(webhookURL: string, payload: PageDtoInterface) {
             }
         }
     };
-
     xhr.send(JSON.stringify(payload).replace(/\//g, '\\/'));
 }
