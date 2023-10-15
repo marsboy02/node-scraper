@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import Redis from "ioredis";
-import { PageDto, PageDtoInterface } from "./util/dto";
+import { PageDto, PageDtoInterface } from "./util/pageDto";
 import {
     listUrl,
     pageUrl,
@@ -95,8 +95,8 @@ function extractedPageWithIndex(fullUrl: string, $: cheerio.CheerioAPI): PageDto
     const department = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(2)').text();
     const date = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(3)').text();
     const files = extractFilesFromHTML($)
-    const description = $('#contents > div > div.view-bx > div.vw-con').html()
-    return new PageDto(title, writer, department, files, TrimEscapeSequence(description), TrimEscapeSequence(date).substring(0,10), fullUrl)
+    const description = $('#contents > div > div.view-bx > div.vw-con').html();
+    return new PageDto(title, writer, department, files, TrimEscapeSequence(description), TrimEscapeSequence(date).substring(0,10), fullUrl, crawlType)
 }
 
 function main(): void {

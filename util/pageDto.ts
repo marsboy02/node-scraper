@@ -6,6 +6,7 @@ export interface PageDtoInterface {
     date: string,
     description: string,
     url: string,
+    origin: string,
 }
 
 export class PageDto implements PageDtoInterface {
@@ -17,6 +18,7 @@ export class PageDto implements PageDtoInterface {
         public description: string,
         public date: string,
         public url: string,
+        public origin: string,
         )
     {}
 }
