@@ -11,7 +11,12 @@
 ## Environment
 
 ### redis
-- 본 서비스는 redis를 사용합니다. node를 통해서 서버를 실행시키기 위해서는 redis의 실행이 필요합니다.
+
+**이 어플리케이션 redis를 사용합니다.** 
+
+```bash
+$ redis-server
+```
 
 ### 1.install dependency
 ```bash
@@ -51,3 +56,6 @@ $ docker push -t {username}/node-scraper
 $ kubectl kustomize . | kubectl apply -f - -n scraper
 ```
 
+## License
+
+- MIT license
