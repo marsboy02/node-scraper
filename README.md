@@ -4,21 +4,22 @@
 - **참고** : [scaling up a serverless web crawler and search engine](https://aws.amazon.com/ko/blogs/architecture/scaling-up-a-serverless-web-crawler-and-search-engine/)
 
 ## Detail
+
 - 컨테이너 환경에서 동작할 수 있도록 docker & docker-compose 환경 지원
 - k8s 환경에서 동작할 수 있도록 k8s & kustomize 환경 지원
-
 
 ## Environment
 
 ### redis
 
-**이 어플리케이션 redis를 사용합니다.** 
+**이 어플리케이션은 redis를 사용합니다.**
 
 ```bash
 $ redis-server
 ```
 
 ### 1.install dependency
+
 ```bash
 $ yarn
 ```
@@ -58,4 +59,4 @@ $ kubectl kustomize . | kubectl apply -f - -n scraper
 
 ## License
 
-- MIT license
+- [MIT license](https://opensource.org/license/mit/)
