@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
             - name: scraper-fa1
-              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              image: marsboy02/node-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA1"
@@ -27,7 +27,7 @@ spec:
                       name: scraper-cm
                       key: REDIS_PORT
             - name: scraper-fa2
-              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              image: marsboy02/node-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA2"
@@ -42,7 +42,7 @@ spec:
                       name: scraper-cm
                       key: REDIS_PORT
             - name: scraper-fa34
-              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              image: marsboy02/node-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA34"
@@ -57,7 +57,7 @@ spec:
                       name: scraper-cm
                       key: REDIS_PORT
             - name: scraper-fa35
-              image: 755333364809.dkr.ecr.ap-northeast-2.amazonaws.com/uoslife-v3/rebuild-scraper:latest
+              image: marsboy02/node-scraper:latest
               env:
                 - name: CRAWL_TYPE
                   value: "FA35"
