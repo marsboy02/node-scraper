@@ -5,6 +5,3 @@
 # build
 *.js
 node_modules
-
-# env
-.env
