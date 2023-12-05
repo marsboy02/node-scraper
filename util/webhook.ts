@@ -1,6 +1,11 @@
 import * as XHLHttpRequest from "xhr2";
 import { PageInterface } from "../dto/page";
 
+/**
+ * xhr2 라이브러리를 통해서 인자로 전달된 URL에 대해 POST 요청을 보내는 함수입니다.
+ * @param webhookURL
+ * @param payload
+ */
 export function triggerWebHook(webhookURL: string, payload: PageInterface) {
     const xhr = new XHLHttpRequest();
     xhr.open("POST", webhookURL, true);
