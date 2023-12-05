@@ -1,14 +1,12 @@
 import axios from "axios/index";
-import {crawlType, pageUrl, redisHost, redisPort, visitedQueueThreshold} from "../config/constants";
-import {PageInterface} from "../dto/page";
-import Redis from "ioredis";
-import {extractedPageWithIndex, getCheerioApiFromResponse} from "./cheerio";
+import { crawlType, pageUrl, visitedQueueThreshold } from "../config/constants";
+import { PageInterface } from "../dto/page";
+import { extractedPageWithIndex, getCheerioApiFromResponse } from "./cheerio";
+import { getRedis } from "../config/redis";
 
 
-const redis: Redis = new Redis({
-    host: redisHost,
-    port: redisPort,
-})
+const redis = getRedis();
+
 export function Produce(listUrl: string, producerCount: number): void  {
     axios.get(listUrl)
         .then(async response => {
