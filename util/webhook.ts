@@ -1,7 +1,7 @@
 import * as XHLHttpRequest from "xhr2";
-import { PageDtoInterface } from "./pageDto";
+import { PageInterface } from "../dto/page";
 
-export function triggerWebHook(webhookURL: string, payload: PageDtoInterface) {
+export function triggerWebHook(webhookURL: string, payload: PageInterface) {
     const xhr = new XHLHttpRequest();
     xhr.open("POST", webhookURL, true);
     xhr.setRequestHeader("Content-Type", "application/json");

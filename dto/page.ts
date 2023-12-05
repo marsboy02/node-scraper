@@ -1,4 +1,4 @@
-export interface PageDtoInterface {
+export interface PageInterface {
     title: string,
     writer: string,
     department: string,
@@ -9,7 +9,7 @@ export interface PageDtoInterface {
     origin: string,
 }
 
-export class PageDto implements PageDtoInterface {
+export class Page implements PageInterface {
     constructor(
         public title: string,
         public writer: string,

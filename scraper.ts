@@ -1,11 +1,11 @@
-import { PageDtoInterface } from "./util/pageDto";
+import { PageInterface } from "./dto/page";
 import {
     listUrl,
     consumerInterval,
     producerCount,
     consumerTTL,
     webhookUrl,
-} from "./util/constants";
+} from "./config/constants";
 import { triggerWebHook } from "./util/webhook";
 import { Produce, ReadQueuedUrls } from "./util/produce";
 
@@ -16,7 +16,7 @@ function main(): void {
 
     // consume
     const interval = setInterval(async () => {
-        const pageData: PageDtoInterface = await ReadQueuedUrls();
+        const pageData: PageInterface = await ReadQueuedUrls();
         if (pageData == null) {
             console.log("queue is empty");
         } else {

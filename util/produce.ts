@@ -1,9 +1,8 @@
 import axios from "axios/index";
-import * as cheerio from "cheerio";
-import {crawlType, pageUrl, redisHost, redisPort, visitedQueueThreshold} from "./constants";
-import {PageDto, PageDtoInterface} from "./pageDto";
+import {crawlType, pageUrl, redisHost, redisPort, visitedQueueThreshold} from "../config/constants";
+import {PageInterface} from "../dto/page";
 import Redis from "ioredis";
-import {extractFilesFromHTML, TrimEscapeSequence} from "./crawl";
+import {extractedPageWithIndex, getCheerioApiFromResponse} from "./cheerio";
 
 
 const redis: Redis = new Redis({
@@ -13,8 +12,7 @@ const redis: Redis = new Redis({
 export function Produce(listUrl: string, producerCount: number): void  {
     axios.get(listUrl)
         .then(async response => {
-            const html = response.data;
-            const $ = cheerio.load(html);
+            const $ = getCheerioApiFromResponse(response)
             for (let i = 1; i < producerCount; i++) {
                 const index: string = extractIndexWithHtml(i, $);
                 await redis.rpush('crawl_queue_' + crawlType , index);
@@ -35,7 +33,7 @@ function extractIndexWithHtml(i, $): string {
 }
 
 // #1 Read Urls in Crawl Queue
-export async function ReadQueuedUrls(): Promise<PageDtoInterface> {
+export async function ReadQueuedUrls(): Promise<PageInterface> {
     const index: string = await redis.lpop('crawl_queue_' + crawlType);
     if (index == null) {
         return null
@@ -44,18 +42,17 @@ export async function ReadQueuedUrls(): Promise<PageDtoInterface> {
 }
 
 // #2 Visited Queue Already Contains Url?
-async function QueueContainsUrls(index): Promise<PageDtoInterface>{
+async function QueueContainsUrls(index): Promise<PageInterface>{
     const isMember: number = await redis.lpos('visited_queue_' + crawlType, index);
     if (isMember == null && index) { return await CrawlPageAndQueueUrls(index); }
 }
 
 // #3 Crawl Page and Queue Urls in Visited Queue
-async function CrawlPageAndQueueUrls(index): Promise<PageDtoInterface> {
+async function CrawlPageAndQueueUrls(index): Promise<PageInterface> {
     const fullUrl: string = pageUrl + '&seq=' + index;
-    const pageDto: PageDtoInterface = await axios.get(fullUrl)
+    const pageDto: PageInterface = await axios.get(fullUrl)
         .then(response => {
-            const html = response.data;
-            const $ = cheerio.load(html);
+            const $ = getCheerioApiFromResponse(response)
             return extractedPageWithIndex(fullUrl, $);
         })
     await CompleteCrawl(index);
@@ -76,13 +73,3 @@ async function VisitedUrlsExceedsThreshold(): Promise<void> {
     }
 }
 
-
-function extractedPageWithIndex(fullUrl: string, $: cheerio.CheerioAPI): PageDtoInterface {
-    const title = $('#contents > div > div.view-bx > div.vw-tibx > h4').text();
-    const writer = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(1)').text();
-    const department = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(2)').text();
-    const date = $('#contents > div > div.view-bx > div.vw-tibx > div > div > span:nth-child(3)').text();
-    const files = extractFilesFromHTML($)
-    const description = $('#contents > div > div.view-bx > div.vw-con').html();
-    return new PageDto(title, writer, department, files, TrimEscapeSequence(description), TrimEscapeSequence(date).substring(0,10), fullUrl, crawlType)
-}
