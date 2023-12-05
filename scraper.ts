@@ -7,7 +7,7 @@ import {
     webhookUrl,
 } from "./config/constants";
 import { triggerWebHook } from "./util/webhook";
-import { Produce, ReadQueuedUrls } from "./util/produce";
+import { Produce, ReadQueuedUrls } from "./util/crawl";
 
 
 function main(): void {

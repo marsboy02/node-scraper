@@ -1,11 +1,12 @@
 import axios from "axios/index";
 import { crawlType, pageUrl, visitedQueueThreshold } from "../config/constants";
 import { PageInterface } from "../dto/page";
-import { extractedPageWithIndex, getCheerioApiFromResponse } from "./cheerio";
+import { extractPageWithIndex, getCheerioApiFromResponse } from "./cheerio";
 import { getRedis } from "../config/redis";
+import Redis from "ioredis";
 
-
-const redis = getRedis();
+// redis
+const redis: Redis = getRedis();
 
 export function Produce(listUrl: string, producerCount: number): void  {
     axios.get(listUrl)
@@ -51,7 +52,7 @@ async function CrawlPageAndQueueUrls(index): Promise<PageInterface> {
     const pageDto: PageInterface = await axios.get(fullUrl)
         .then(response => {
             const $ = getCheerioApiFromResponse(response)
-            return extractedPageWithIndex(fullUrl, $);
+            return extractPageWithIndex(fullUrl, $);
         })
     await CompleteCrawl(index);
     return pageDto
