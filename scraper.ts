@@ -11,10 +11,8 @@ import { Produce, ReadQueuedUrls } from "./util/crawl";
 
 
 function main(): void {
-    // produce
     Produce(listUrl, producerCount);
 
-    // consume
     const interval = setInterval(async () => {
         const pageData: PageInterface = await ReadQueuedUrls();
         if (pageData == null) {

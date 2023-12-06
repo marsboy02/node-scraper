@@ -8,6 +8,12 @@ import Redis from "ioredis";
 // redis
 const redis: Redis = getRedis();
 
+
+/**
+ * 게시글 목록이 있는 URL을 인자로 전달받아 count 만큼 해당 게시글의 index를 추출하는 함수입니다. 추출된 값을 redis에 전달합니다.
+ * @param listUrl
+ * @param producerCount
+ */
 export function Produce(listUrl: string, producerCount: number): void  {
     axios.get(listUrl)
         .then(async response => {
@@ -32,6 +38,9 @@ function extractIndexWithHtml(i, $): string {
 }
 
 // #1 Read Urls in Crawl Queue
+/**
+ * produce를 통해 레디스 큐에 생성된 index를 기반으로 게시물의 상세 내용을 크롤링합니다.
+ */
 export async function ReadQueuedUrls(): Promise<PageInterface> {
     const index: string = await redis.lpop('crawl_queue_' + crawlType);
     if (index == null) {
