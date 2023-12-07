@@ -1,4 +1,4 @@
-import axios from "axios/index";
+import axios from "axios";
 import { crawlType, pageUrl, visitedQueueThreshold } from "../config/constants";
 import { PageInterface } from "../dto/page";
 import { extractPageWithIndex, getCheerioApiFromResponse } from "./cheerio";
