@@ -10,42 +10,32 @@
 
 ## Environment
 
-### redis
-
-**이 어플리케이션은 redis를 사용합니다.**
+### local에서 node를 실행하는 경우
 
 ```bash
+# redis 실행
 $ redis-server
-```
 
-### 1.install dependency
+# node 의존성 설치
+$ yarn install
 
-```bash
-$ yarn
-```
-
-### 2-1. using node
-
-```bash
 $ yarn start
 ```
 
-### 2-1. using docker-compose
+### docker를 사용하는 경우
 
 ```bash
 $ docker-compose up
 ```
 
-### 2-2. using k8s
+### K8s를 사용하는 경우
 
 **build docker image**
 
 ```bash
 # docker image build
 $ docker build -t {username}/node-scraper .
-```
 
-```bash
 # docker image push
 $ docker push -t {username}/node-scraper
 ```
